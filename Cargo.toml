@@ -1,0 +1,12 @@
+[package]
+name = "gemini-api-test-app-1"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+reqwest = { version = "*", features = ["blocking"] }
+chrono = "*"
+tokio = { version = "0.*", features = ["macros", "rt-multi-thread"] }
+serde = "*"
+serde_json = "*"
+serde_derive = "*"
