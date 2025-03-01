@@ -59,21 +59,12 @@ struct UsageMetadata {
 }
 
 #[derive(serde_derive::Serialize, serde_derive::Deserialize, Debug)]
-struct GeminiRequest {
+struct GeminiApiResponse {
 	pub candidates: Vec<Candidate>,
 	#[serde(rename = "usageMetadata")]
 	pub usage_metadata: UsageMetadata,
 	#[serde(rename = "modelVersion")]
 	pub model_version: String,
-}
-
-/// テスト その1
-#[allow(unused)]
-fn test1() -> Result<(), Box<dyn std::error::Error>> {
-	let client = reqwest::blocking::Client::new();
-	let res = client.get("https://www.rust-lang.org").send()?.text()?;
-	println!("{}", res);
-	return Ok(());
 }
 
 /// 環境変数を取得します。
@@ -98,8 +89,8 @@ fn test2() -> Result<(), Box<dyn std::error::Error>> {
 
 	let url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
 
-	let mut q = HashMap::<&str, String>::new();
-	q.insert("key", gemini_api_key);
+	let mut query = HashMap::<&str, String>::new();
+	query.insert("key", gemini_api_key);
 
 	let mut headers = reqwest::header::HeaderMap::new();
 	headers.insert("Content-Type", "application/json".parse().unwrap());
@@ -112,18 +103,11 @@ fn test2() -> Result<(), Box<dyn std::error::Error>> {
 	.to_string();
 
 	let client = reqwest::blocking::Client::new();
-	let res = client
-		.post(url)
-		.query(&q)
-		.headers(headers)
-		// .json(&json!({
-		.body(body)
-		.send()?
-		.text()?;
+	let res = client.post(url).query(&query).headers(headers).body(body).send()?.text()?;
 
 	println!("{}", res);
 
-	let gemini_response: GeminiRequest = serde_json::from_str(&res)?;
+	let gemini_response: GeminiApiResponse = serde_json::from_str(&res)?;
 
 	println!("{:?}", gemini_response);
 
@@ -133,12 +117,6 @@ fn test2() -> Result<(), Box<dyn std::error::Error>> {
 /// Rust アプリケーションのエントリーポイント
 #[tokio::main]
 async fn main() {
-	// let result = test1();
-	// if result.is_err() {
-	// 	println!("Error: {:?}", result.err());
-	// 	return;
-	// }
-
 	let result = test2();
 	if result.is_err() {
 		println!("Error: {:?}", result.err());
