@@ -27,11 +27,11 @@ pub struct CitationMetadata {
 pub struct Candidate {
 	pub content: Content,
 	#[serde(rename = "finishReason")]
-	pub finish_reason: String,
+	pub finish_reason: Option<String>,
 	#[serde(rename = "citationMetadata")]
 	pub citation_metadata: Option<CitationMetadata>,
 	#[serde(rename = "avgLogprobs")]
-	pub avg_logprobs: f64,
+	pub avg_logprobs: Option<f64>,
 }
 
 #[derive(serde_derive::Serialize, serde_derive::Deserialize, Debug)]
@@ -46,13 +46,13 @@ pub struct UsageMetadata {
 	#[serde(rename = "promptTokenCount")]
 	pub prompt_token_count: i32,
 	#[serde(rename = "candidatesTokenCount")]
-	pub candidates_token_count: i32,
+	pub candidates_token_count: Option<i32>,
 	#[serde(rename = "totalTokenCount")]
 	pub total_token_count: i32,
 	#[serde(rename = "promptTokensDetails")]
-	pub prompt_tokens_details: Vec<TokenDetail>,
+	pub prompt_tokens_details: Option<Vec<TokenDetail>>,
 	#[serde(rename = "candidatesTokensDetails")]
-	pub candidates_tokens_details: Vec<TokenDetail>,
+	pub candidates_tokens_details: Option<Vec<TokenDetail>>,
 }
 
 #[derive(serde_derive::Serialize, serde_derive::Deserialize, Debug)]
@@ -70,4 +70,9 @@ pub struct GeminiApiResponse {
 	#[serde(rename = "modelVersion")]
 	pub model_version: Option<String>,
 	pub error: Option<GeminiError>,
+}
+
+#[derive(serde_derive::Serialize, serde_derive::Deserialize, Debug)]
+pub struct GeminiApiErrorResponse {
+	pub error: GeminiError,
 }
